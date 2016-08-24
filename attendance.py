@@ -46,8 +46,8 @@ def readBalanceSheet(workbook, sheetName, globalDict):
             key = str(ws['B'+str(c)].value)
             if not key in globalDict:
                 globalDict[key] = {}
-            print key + ':' + sheetName + ':' + str(ws[col+str(c)].value)
-            print len(str(ws['B'+str(c)].value))
+            #print key + ':' + sheetName + ':' + str(ws[col+str(c)].value)
+            #print len(str(ws['B'+str(c)].value))
             if sheetName == 'Sick':
                 globalDict[key][sheetName] = {'Balance':0.0,'Usable':0.0}
                 if ws[col+str(c)].value > 0:
@@ -66,7 +66,7 @@ def readBalanceSheet(workbook, sheetName, globalDict):
                     globalDict[key][sheetName] = round(ws[col+str(c)].value, 2)
                 else:
                     globalDict[key][sheetName] = 0.0
-    print 'count: ' + str(c)
+    #print 'count: ' + str(c)
     return globalDict
 
 
@@ -74,4 +74,13 @@ if __name__ == '__main__':
     getcontext().prec = 2
     obj = Attendance()
     obj.populate()
-    
+    rpt = obj.balanceReport('Vacation', 'McFarlane, Rob')
+    print json.dumps('Vac: ' + str(rpt))
+    rpt = obj.balanceReport('Sick', 'McFarlane, Rob')
+    print json.dumps('Sick: ' + str(rpt))
+    rpt = obj.balanceReport('Float', 'McFarlane, Rob')
+    print json.dumps('Float: ' + str(rpt))
+    path = '/Users/mmiraglia/Google Drive/Operations/Attendance/PTO Balances/pto.json'
+    f = open(path, 'wb')
+    f.write(json.dumps(obj.data, sort_keys=True, indent=2))
+    f.close()
